@@ -1,0 +1,9 @@
+# Creamos una variable con el nombre del ordenador
+$hostname=(Get-WmiObject -Class Win32_ComputerSystem -Property Name).Name
+# Instalamos los servicios de Active Directory
+Install-WindowsFeature –Name AD-Domain-Services –ComputerName $hostname
+Install-WindowsFeature ad-domain-services -IncludeManagementTools -ComputerName $env:COMPUTERNAME
+$domin=Read-Host "Introduce el nombre del dominio(Solo nombre)"
+$ext=Read-Host "Introduce la extension(ga,com)"
+# Promocionamos el dominio
+Install-ADDSForest –CreateDNSDelegation:$False –DatabasePath “C:\Windows\NTDS” –DomainMode “Win2012” –DomainName “$domin.$ext” –DomainNetbiosName “$domin” –ForestMode “Win2012” –InstallDNS:$True –LogPath “C:\Windows\NTDS” –NoRebootOnCompletion:$False –SysVolPath “C:\Windows\SysVol” –force:$true
